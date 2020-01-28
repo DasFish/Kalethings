@@ -1,30 +1,33 @@
-int camera_initialize(){
+#include <kipr/wombat.h>
+#include <camera.h>
+int initialize(){
     camera_open_black();
-    int a=0;
-    while(a<6){
+    int count=0;
+    while(count<6){
         camera_update();
-        a=a+1;
+        msleep(50);
+        count=count+1;
     }
     return 0;
 }
-int full_check(int c){ 
-    int a=0;
-    int b=0;
-    while(a<30){  
-        camera_update();
-        if(get_object_count(c)>0){b=b+1;}
-        a=a+1;
-    }
-    if(b>10){return 1;}
-    else{return 0;}
-    camera_close();
-}
-int camera_center(int color){
-    camera_initialize();
-    if(full_check(color)==1){
-        while(1){
-            motor(0,(get_object_center_x(color,0)-80));
-            motor(3,(80-(get_object_center_x(color,0))));
+int camera_rotate(int channel)
+{
+    initialize();
+    while(1)
+    {
+
+        if(get_object_count(channel)>0)
+        { printf("%d\n", get_object_center_x(channel,0));
+
+         mav(0,(get_object_center_x(channel,0)-80));
+         mav(3,(80-(get_object_center_x(0,0))));
+         camera_update();
+
         }
+        msleep(50);
+
     }
+
+    camera_close();
+    return 0;
 }
